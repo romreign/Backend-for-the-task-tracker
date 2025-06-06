@@ -7,6 +7,7 @@ import models.TypeTask;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager{
     private HashMap<Integer, Task> tasks;
@@ -40,7 +41,7 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     @Override
-    public HashMap<Integer, Task> getTasks() {
+    public Map<Integer, Task> getTasks() {
         return tasks;
     }
 
@@ -60,7 +61,7 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     @Override
-    public HashMap<Integer, Subtask> getSubtasks() {
+    public Map<Integer, Subtask> getSubtasks() {
         return subtasks;
     }
 
@@ -84,7 +85,7 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     @Override
-    public HashMap<Integer, Subtask> getSubtasksByEpicId(int id) {
+    public Map<Integer, Subtask> getSubtasksByEpicId(int id) {
         if (!epics.containsKey(id)) {
             System.out.println("Эпик с идентификатором - " + id + " не найден");
             return null;
@@ -98,7 +99,7 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     @Override
-    public HashMap<Integer, Epic> getEpics() {
+    public Map<Integer, Epic> getEpics() {
         return epics;
     }
 
@@ -125,6 +126,7 @@ public class InMemoryTaskManager implements TaskManager{
                 return;
             }
             tasks.remove(id);
+            historyManager.remove(id);
             System.out.println("Удалена задача с идентификатором - " + id);
         }
         else if (typeTask == models.TypeTask.SUBTASK) {
@@ -139,6 +141,7 @@ public class InMemoryTaskManager implements TaskManager{
                 epic.updateStatus();
             }
             subtasks.remove(id);
+            historyManager.remove(id);
             System.out.println("Удалена подзадача с идентификатором - " + id);
         }
         else if (typeTask == TypeTask.EPIC) {
@@ -151,6 +154,7 @@ public class InMemoryTaskManager implements TaskManager{
                 subtasks.remove(subtask.getId());
             }
             epics.remove(id);
+            historyManager.remove(id);
             System.out.println("Удален эпик с идентификатором - " + id);
         }
     }

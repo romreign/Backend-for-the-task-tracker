@@ -12,7 +12,11 @@ public class Subtask extends Task {
     }
 
     public Subtask(String title, String description, Status status, int idEpic) {
-        this(description, title, 0, status, idEpic);
+        this(title, description, 0, status, idEpic);
+    }
+
+    public Subtask(String title, String description, int idEpic) {
+        this(title, description, 0, Status.NEW, idEpic);
     }
 
     public int getIdEpic() {

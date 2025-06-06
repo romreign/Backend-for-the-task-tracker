@@ -1,3 +1,4 @@
+
 import models.*;
 import service.InMemoryTaskManager;
 import service.Manager;
@@ -8,14 +9,35 @@ import java.util.Objects;
 
 public class Main {
     public static void main(String[] args) {
+        testManagerUtilityClass();
         testTaskCreationAndDeletion();
         testEpicAndSubtaskStatusFlow();
         testHistoryManagerFunctionality();
-        testManagerUtilityClass();
+    }
+
+    private static void testManagerUtilityClass() {
+        System.out.println("\n=== Проверка класса Manager ===");
+        TaskManager manager = Manager.getDefault();
+
+        Task task = new Task("Task", "Description", Status.NEW);
+        manager.create(task);
+
+        Task retrievedTask = manager.getTask(task.getId());
+        if (retrievedTask != null)
+            System.out.println("Задача успешно добавлена: " + retrievedTask.getTitle());
+        else
+            System.out.println("Ошибка: Задача не найдена.");
+
+
+        if (manager.history().contains(task))
+            System.out.println("История содержит задачу: " + task.getTitle());
+        else
+            System.out.println("Ошибка: История не содержит задачу.");
+
     }
 
     private static void testTaskCreationAndDeletion() {
-        System.out.println("\n=== Тест 1: Создание и удаление задач ===");
+        System.out.println("\n=== Создание и удаление задач ===");
         TaskManager manager = new InMemoryTaskManager();
 
         Task task = new Task("Task 1", "Description", Status.NEW);
@@ -30,7 +52,7 @@ public class Main {
     }
 
     private static void testEpicAndSubtaskStatusFlow() {
-        System.out.println("\n=== Тест 2: Проверка статусов эпика ===");
+        System.out.println("\n=== Проверка статусов эпика ===");
         TaskManager manager = new InMemoryTaskManager();
 
         Epic epic = new Epic("Epic 1", "Description", Status.NEW);
@@ -47,67 +69,89 @@ public class Main {
     }
 
     private static void testHistoryManagerFunctionality() {
-        System.out.println("\n=== Тест 3: Проверка истории просмотров ===");
-        TaskManager manager = new InMemoryTaskManager();
-
-        Task task1 = new Task("Task 1", "Description", Status.NEW);
-        Task task2 = new Task("Task 2", "Description", Status.NEW);
-        manager.create(task1);
-        manager.create(task2);
-
-        manager.getTask(task1.getId());
-        manager.getTask(task2.getId());
-
-        List<Task> history = manager.history();
-        assertEqual(2, history.size(), "История должна содержать 2 задачи");
-        assertEqual(task1, history.get(0), "Первая задача в истории не совпадает");
-        assertEqual(task2, history.get(1), "Вторая задача в истории не совпадает");
-
-        for (int i = 0; i < 15; i++) {
-            manager.getTask(task1.getId());
-        }
-        assertEqual(10, manager.history().size(), "История должна ограничиваться 10 элементами");
-    }
-
-    private static void testManagerUtilityClass() {
-        System.out.println("\n=== Проверка класса Manager ===");
+        System.out.println("\n=== Тестирование менеджера истории ===");
         TaskManager manager = Manager.getDefault();
 
-        Task task = new Task("Task", "Description", Status.NEW);
-        manager.create(task);
 
-        Task retrievedTask = manager.getTask(task.getId());
-        if (retrievedTask != null) {
-            System.out.println("Задача успешно добавлена: " + retrievedTask.getTitle());
-        } else {
-            System.out.println("Ошибка: Задача не найдена.");
+        Task task1 = new Task("Задача 1", "Описание задачи 1");
+        Task task2 = new Task("Задача 2", "Описание задачи 2");
+
+        Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
+        Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
+
+        Subtask subtask1 = new Subtask("Подзадача 1", "Описание подзадачи 1", epic1.getId());
+        Subtask subtask2 = new Subtask("Подзадача 2", "Описание подзадачи 2", epic1.getId());
+        Subtask subtask3 = new Subtask("Подзадача 3", "Описание подзадачи 3", epic1.getId());
+
+
+        manager.create(task1);
+        manager.create(task2);
+        manager.create(epic1);
+        manager.create(epic2);
+        manager.create(subtask1);
+        manager.create(subtask2);
+        manager.create(subtask3);
+
+
+        System.out.println("\nФормируем историю просмотров:");
+        manager.getTask(task1.getId());
+        manager.getEpic(epic1.getId());
+        manager.getSubtask(subtask1.getId());
+        manager.getTask(task2.getId());
+        manager.getSubtask(subtask2.getId());
+        manager.getEpic(epic2.getId());
+        manager.getEpic(epic1.getId());
+        manager.getSubtask(subtask3.getId());
+
+
+        printHistory(manager.history());
+
+
+        System.out.println("\nУдаляем задачу 1:");
+        manager.remove(task1.getId(), TypeTask.TASK);
+        printHistory(manager.history());
+
+
+        System.out.println("\nУдаляем эпик 1 (с подзадачами):");
+        manager.remove(epic1.getId(), TypeTask.EPIC);
+        printHistory(manager.history());
+
+
+        System.out.println("\nФинальное состояние истории:");
+        printHistory(manager.history());
+    }
+
+    private static void printHistory(List<Task> history) {
+        if (history.isEmpty()) {
+            System.out.println("История пуста.");
+            return;
         }
 
-        if (manager.history().contains(task)) {
-            System.out.println("История содержит задачу: " + task.getTitle());
-        } else {
-            System.out.println("Ошибка: История не содержит задачу.");
+        System.out.println("Текущая история (" + history.size() + " элементов):");
+        for (Task task : history) {
+            String type = task instanceof Epic ? "Эпик" : task instanceof Subtask ? "Подзадача" : "Задача";
+            System.out.printf("- %s: %s (ID: %d)\n", type, task.getTitle(), task.getId());
         }
     }
 
     private static void assertEqual(Object expected, Object actual, String message) {
-        if (!Objects.equals(expected, actual)) {
+        if (!Objects.equals(expected, actual))
             throw new AssertionError(message + ". Ожидалось: " + expected + ", получено: " + actual);
-        }
+
         System.out.println("[OK] " + message);
     }
 
     private static void assertNull(Object object, String message) {
-        if (object != null) {
+        if (object != null)
             throw new AssertionError(message);
-        }
+
         System.out.println("[OK] " + message);
     }
 
     private static void assertTrue(boolean condition, String message) {
-        if (!condition) {
+        if (!condition)
             throw new AssertionError(message);
-        }
+
         System.out.println("[OK] " + message);
     }
 }

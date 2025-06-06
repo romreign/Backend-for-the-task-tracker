@@ -7,28 +7,29 @@ import models.TypeTask;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface TaskManager {
 
     List<Task> history();
 
-    HashMap<Integer, Task> getTasks();
+    Map<Integer, Task> getTasks();
 
     Task getTask(int id);
 
     void setTasks(HashMap<Integer, Task> tasks);
 
-    HashMap<Integer, Subtask> getSubtasks();
+    Map<Integer, Subtask> getSubtasks();
 
     String toString();
 
-    HashMap<Integer, Subtask> getSubtasksByEpicId(int id);
+    Map<Integer, Subtask> getSubtasksByEpicId(int id);
 
     Task getSubtask(int id);
 
     void setSubtasks(HashMap<Integer, Subtask> subtasks);
 
-    HashMap<Integer, Epic> getEpics();
+    Map<Integer, Epic> getEpics();
 
     Task getEpic(int id);
 

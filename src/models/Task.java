@@ -19,6 +19,10 @@ public class Task {
         this(title, description, 0, status);
     }
 
+    public Task(String title, String description) {
+        this(title, description, 0, Status.NEW);
+    }
+
     public String getTitle() {
         return title;
     }
