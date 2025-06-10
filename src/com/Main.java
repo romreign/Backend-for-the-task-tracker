@@ -1,25 +1,104 @@
+package com;
 
-import models.*;
-import service.InMemoryTaskManager;
-import service.Manager;
-import service.TaskManager;
+import com.models.repository.*;
+import com.service.InMemoryTaskManager;
+import com.service.Manager;
+import com.service.TaskManager;
 
 import java.util.List;
 import java.util.Objects;
 
 public class Main {
     public static void main(String[] args) {
-        testManagerUtilityClass();
-        testTaskCreationAndDeletion();
-        testEpicAndSubtaskStatusFlow();
-        testHistoryManagerFunctionality();
+
+            String file = "data.txt";
+         //   testManagerUtilityClass();
+       //    testTaskCreationAndDeletion();
+        //    testEpicAndSubtaskStatusFlow();
+        //    testHistoryManagerFunctionality();
+          // testFileBackedTasksManagerWithoutHistory(file);
+          testFileBackedTasksManager(file);
+            //testOnload(file);
+
+    }
+
+    private static void testOnload(String fileName) {
+        TaskManager manager = Manager.getFileBacked(fileName);
+
+        System.out.println(manager);
+
+        Task subtask = new Subtask("title", "description", 4, StatusTask.IN_PROGRESS, 2);
+        manager.update(subtask);
+
+
+        System.out.println(manager);
+    }
+
+    private static void testFileBackedTasksManagerWithoutHistory(String fileName) {
+        TaskManager manager = Manager.getFileBacked(fileName);
+
+        Task task1 = new Task("Задача 1", "Описание задачи 1");
+        Task task2 = new Task("Задача 2", "Описание задачи 2");
+
+        manager.create(task1);
+        manager.create(task2);
+
+        Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
+        Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
+
+        manager.create(epic1);
+        manager.create(epic2);
+
+        Subtask subtask1 = new Subtask("Подзадача 1", "Описание подзадачи 1", epic1.getId());
+        Subtask subtask2 = new Subtask("Подзадача 2", "Описание подзадачи 2", epic1.getId());
+        Subtask subtask3 = new Subtask("Подзадача 3", "Описание подзадачи 3", epic1.getId());
+
+        manager.create(subtask1);
+        manager.create(subtask2);
+        manager.create(subtask3);
+
+    }
+
+    private static void testFileBackedTasksManager(String fileName) {
+        TaskManager manager = Manager.getFileBacked(fileName);
+
+        Task task1 = new Task("Задача 1", "Описание задачи 1");
+        Task task2 = new Task("Задача 2", "Описание задачи 2");
+
+        manager.create(task1);
+        manager.create(task2);
+
+        Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
+        Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
+
+        manager.create(epic1);
+        manager.create(epic2);
+
+        Subtask subtask1 = new Subtask("Подзадача 1", "Описание подзадачи 1", epic1.getId());
+        Subtask subtask2 = new Subtask("Подзадача 2", "Описание подзадачи 2", epic1.getId());
+        Subtask subtask3 = new Subtask("Подзадача 3", "Описание подзадачи 3", epic1.getId());
+
+
+        manager.create(subtask1);
+        manager.create(subtask2);
+        manager.create(subtask3);
+
+        manager.getTask(task1.getId());
+        manager.getEpic(epic1.getId());
+        manager.getSubtask(subtask1.getId());
+        manager.getTask(task2.getId());
+        manager.getSubtask(subtask2.getId());
+        manager.getEpic(epic2.getId());
+        manager.getEpic(epic1.getId());
+        manager.getSubtask(subtask3.getId());
+
     }
 
     private static void testManagerUtilityClass() {
         System.out.println("\n=== Проверка класса Manager ===");
         TaskManager manager = Manager.getDefault();
 
-        Task task = new Task("Task", "Description", Status.NEW);
+        Task task = new Task("Task", "Description", StatusTask.NEW);
         manager.create(task);
 
         Task retrievedTask = manager.getTask(task.getId());
@@ -40,7 +119,7 @@ public class Main {
         System.out.println("\n=== Создание и удаление задач ===");
         TaskManager manager = new InMemoryTaskManager();
 
-        Task task = new Task("Task 1", "Description", Status.NEW);
+        Task task = new Task("Task 1", "Description", StatusTask.NEW);
         manager.create(task);
         System.out.println("Создана задача: " + task);
 
@@ -55,43 +134,42 @@ public class Main {
         System.out.println("\n=== Проверка статусов эпика ===");
         TaskManager manager = new InMemoryTaskManager();
 
-        Epic epic = new Epic("Epic 1", "Description", Status.NEW);
+        Epic epic = new Epic("Epic 1", "Description", StatusTask.NEW);
         manager.create(epic);
 
-        Subtask subtask = new Subtask("Subtask 1", "Description", Status.NEW, epic.getId());
+        Subtask subtask = new Subtask("Subtask 1", "Description", StatusTask.NEW, epic.getId());
         manager.create(subtask);
 
-        assertEqual(Status.NEW, epic.getStatus(), "Эпик должен быть NEW");
+        assertEqual(StatusTask.NEW, epic.getStatus(), "Эпик должен быть NEW");
 
-        subtask.setStatus(Status.DONE);
+        subtask.setStatus(StatusTask.DONE);
         manager.update(subtask);
-        assertEqual(Status.DONE, epic.getStatus(), "Эпик должен быть DONE");
+        assertEqual(StatusTask.DONE, epic.getStatus(), "Эпик должен быть DONE");
     }
 
     private static void testHistoryManagerFunctionality() {
         System.out.println("\n=== Тестирование менеджера истории ===");
         TaskManager manager = Manager.getDefault();
 
-
         Task task1 = new Task("Задача 1", "Описание задачи 1");
         Task task2 = new Task("Задача 2", "Описание задачи 2");
 
+        manager.create(task1);
+        manager.create(task2);
+
         Epic epic1 = new Epic("Эпик 1", "Описание эпика 1");
         Epic epic2 = new Epic("Эпик 2", "Описание эпика 2");
+
+        manager.create(epic1);
+        manager.create(epic2);
 
         Subtask subtask1 = new Subtask("Подзадача 1", "Описание подзадачи 1", epic1.getId());
         Subtask subtask2 = new Subtask("Подзадача 2", "Описание подзадачи 2", epic1.getId());
         Subtask subtask3 = new Subtask("Подзадача 3", "Описание подзадачи 3", epic1.getId());
 
-
-        manager.create(task1);
-        manager.create(task2);
-        manager.create(epic1);
-        manager.create(epic2);
         manager.create(subtask1);
         manager.create(subtask2);
         manager.create(subtask3);
-
 
         System.out.println("\nФормируем историю просмотров:");
         manager.getTask(task1.getId());
@@ -102,7 +180,6 @@ public class Main {
         manager.getEpic(epic2.getId());
         manager.getEpic(epic1.getId());
         manager.getSubtask(subtask3.getId());
-
 
         printHistory(manager.history());
 

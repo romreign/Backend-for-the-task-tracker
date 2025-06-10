@@ -1,7 +1,7 @@
-package service;
+package com.service;
 
-import models.Node;
-import models.Task;
+import com.models.dataStructure.Node;
+import com.models.repository.Task;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package models;
+package com.models.repository;
 
 import java.util.Objects;
 
@@ -6,21 +6,21 @@ public class Task {
     protected String title;
     protected String description;
     protected int id;
-    protected Status status;
+    protected StatusTask statusTask;
 
-    public Task(String title, String description, int id, Status status) {
+    public Task(String title, String description, int id, StatusTask statusTask) {
         this.description = description;
         this.title = title;
-        this.status = status;
+        this.statusTask = statusTask;
         this.id = id;
     }
 
-    public Task(String title, String description, Status status) {
-        this(title, description, 0, status);
+    public Task(String title, String description, StatusTask statusTask) {
+        this(title, description, 0, statusTask);
     }
 
     public Task(String title, String description) {
-        this(title, description, 0, Status.NEW);
+        this(title, description, 0, StatusTask.NEW);
     }
 
     public String getTitle() {
@@ -47,12 +47,12 @@ public class Task {
         this.id = id;
     }
 
-    public Status getStatus() {
-        return status;
+    public StatusTask getStatus() {
+        return statusTask;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setStatus(StatusTask statusTask) {
+        this.statusTask = statusTask;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class Task {
                 + "title = '" + title + "'"
                 + ", description.length = '" + description.length() + "'"
                 + ", id = " + id
-                + ", status = " + status
+                + ", status = " + statusTask
                 + "}\n";
     }
 
@@ -74,7 +74,7 @@ public class Task {
 
         Task task = (Task) o;
         return id == task.id && Objects.equals(title, task.title) && Objects.equals(description, task.description)
-                && status == task.status;
+                && statusTask == task.statusTask;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class Task {
         hash = ((title != null ? title.hashCode() : 0 ) + hash) * prime;
         hash = ((description != null ? description.hashCode() : 0 ) + hash) * prime;
         hash = (id + hash) * prime;
-        hash = ((status != null ? status.hashCode() : 0 ) + hash) * prime;
+        hash = ((statusTask != null ? statusTask.hashCode() : 0 ) + hash) * prime;
         return hash;
     }
 }

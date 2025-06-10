@@ -1,30 +1,30 @@
-package models;
+package com.models.repository;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class Epic extends Task {
-    private HashMap<Integer, Subtask> subtasks;
+    private Map<Integer, Subtask> subtasks;
 
-    public Epic(String title, String description, int id, Status status) {
-        super(title, description, id, status);
+    public Epic(String title, String description, int id, StatusTask statusTask) {
+        super(title, description, id, statusTask);
         subtasks = new HashMap<Integer, Subtask>();
     }
 
-    public Epic(String title, String description, Status status) {
-        this(title, description, 0, status);
+    public Epic(String title, String description, StatusTask statusTask) {
+        this(title, description, 0, statusTask);
     }
 
     public Epic(String title, String description) {
-        this(title, description, 0, Status.NEW);
+        this(title, description, 0, StatusTask.NEW);
     }
 
     public Map<Integer, Subtask> getSubstasks() {
         return subtasks;
     }
 
-    public void setSubstasks(HashMap<Integer, Subtask> substasks) {
+    public void setSubstasks(Map<Integer, Subtask> substasks) {
         this.subtasks = substasks;
     }
 
@@ -39,21 +39,24 @@ public class Epic extends Task {
 
     public void updateStatus() {
         if (subtasks.isEmpty()) {
-            status = Status.NEW;
+            statusTask = StatusTask.NEW;
             return;
         }
 
         int countDone = 0;
+        int countInProgress = 0;
 
         for (Subtask sub : subtasks.values()) {
-            if (sub.getStatus() == Status.DONE)
+            if (sub.getStatus() == StatusTask.DONE)
                 countDone++;
+            else if (sub.getStatus() == StatusTask.IN_PROGRESS)
+                countInProgress++;
         }
 
         if (countDone == subtasks.size())
-            status = Status.DONE;
-        else if (countDone < subtasks.size() && countDone > 0)
-            status = Status.IN_PROGRESS;
+            statusTask = StatusTask.DONE;
+        else if (countInProgress > 0 || countDone < subtasks.size() && countDone > 0)
+            statusTask = StatusTask.IN_PROGRESS;
     }
 
     @Override
@@ -62,7 +65,7 @@ public class Epic extends Task {
                 + "title = '" + title + "'"
                 + ", description.length = '" + description.length() + "'"
                 + ", id = " + id
-                + ", status = " + status
+                + ", status = " + statusTask
                 + "\n\tsubtasks{\n";
         for (Subtask sub: subtasks.values())
             str += '\t' + sub.toString();
@@ -79,7 +82,7 @@ public class Epic extends Task {
 
         Epic epic = (Epic) o;
         return Objects.equals(subtasks, epic.subtasks) && id == epic.id && Objects.equals(title, epic.title)
-                && Objects.equals(description, epic.description) && status == epic.status;
+                && Objects.equals(description, epic.description) && statusTask == epic.statusTask;
     }
 
     @Override
@@ -90,7 +93,7 @@ public class Epic extends Task {
         hash = ((title != null ? title.hashCode() : 0 ) + hash) * prime;
         hash = ((description != null ? description.hashCode() : 0 ) + hash) * prime;
         hash = (id + hash) * prime;
-        hash = ((status != null ? status.hashCode() : 0 ) + hash) * prime;
+        hash = ((statusTask != null ? statusTask.hashCode() : 0 ) + hash) * prime;
         hash = ((subtasks != null ? subtasks.hashCode() : 0 ) + hash) * prime;
         return hash;
     }

@@ -1,22 +1,21 @@
-package models;
+package com.models.repository;
 
-import java.util.HashMap;
 import java.util.Objects;
 
 public class Subtask extends Task {
     private int idEpic;
 
-    public Subtask(String title, String description, int id, Status status, int idEpic) {
-        super(title, description, id, status);
+    public Subtask(String title, String description, int id, StatusTask statusTask, int idEpic) {
+        super(title, description, id, statusTask);
         this.idEpic = idEpic;
     }
 
-    public Subtask(String title, String description, Status status, int idEpic) {
-        this(title, description, 0, status, idEpic);
+    public Subtask(String title, String description, StatusTask statusTask, int idEpic) {
+        this(title, description, 0, statusTask, idEpic);
     }
 
     public Subtask(String title, String description, int idEpic) {
-        this(title, description, 0, Status.NEW, idEpic);
+        this(title, description, 0, StatusTask.NEW, idEpic);
     }
 
     public int getIdEpic() {
@@ -37,7 +36,7 @@ public class Subtask extends Task {
         Subtask subtask = (Subtask) o;
         return idEpic == subtask.idEpic && id == subtask.id && Objects.equals(title, subtask.title)
                 && Objects.equals(description, subtask.description)
-                && status == subtask.status;
+                && statusTask == subtask.statusTask;
     }
 
     @Override
@@ -48,7 +47,7 @@ public class Subtask extends Task {
         hash = ((title != null ? title.hashCode() : 0 ) + hash) * prime;
         hash = ((description != null ? description.hashCode() : 0 ) + hash) * prime;
         hash = (id + hash) * prime;
-        hash = ((status != null ? status.hashCode() : 0 ) + hash) * prime;
+        hash = ((statusTask != null ? statusTask.hashCode() : 0 ) + hash) * prime;
         hash = (idEpic + hash) * prime;
         return hash;
     }
@@ -59,7 +58,7 @@ public class Subtask extends Task {
                 + "title = '" + title + "'"
                 + ", description.length = '" + description.length() + "'"
                 + ", id = " + id
-                + ", status = " + status
+                + ", status = " + statusTask
                 + ", idEpic = " + idEpic
                 + "}\n";
     }
