@@ -1,4 +1,4 @@
-package com.models.repository;
+package main.java.models;
 
 public enum TypeTask {
     TASK,

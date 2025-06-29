@@ -1,9 +1,9 @@
-package com.service;
-
-import com.models.dataStructure.Node;
-import com.models.repository.Task;
+package main.java.service;
 
 import java.util.*;
+
+import main.java.dataStructure.Node;
+import main.java.models.Task;
 
 public class InMemoryHistoryManager implements HistoryManager{
 

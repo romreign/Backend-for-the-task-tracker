@@ -1,4 +1,4 @@
-package com.service;
+package main.java.service;
 
 
 public class Manager {

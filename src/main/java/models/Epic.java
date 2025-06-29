@@ -1,23 +1,30 @@
-package com.models.repository;
+package main.java.models;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class Epic extends Task {
     private Map<Integer, Subtask> subtasks;
+    LocalDateTime endTime;
 
-    public Epic(String title, String description, int id, StatusTask statusTask) {
-        super(title, description, id, statusTask);
+    public Epic(String title, String description, int id, StatusTask statusTask, LocalDateTime startTime, long duration) {
+        super(title, description, id, statusTask, startTime, duration);
         subtasks = new HashMap<Integer, Subtask>();
+        endTime = null;
     }
 
     public Epic(String title, String description, StatusTask statusTask) {
-        this(title, description, 0, statusTask);
+        this(title, description, 0, statusTask, null, 0L);
+    }
+
+    public Epic(String title, String description, int id) {
+        this(title, description, id, StatusTask.NEW, null, 0L);
     }
 
     public Epic(String title, String description) {
-        this(title, description, 0, StatusTask.NEW);
+        this(title, description, 0, StatusTask.NEW, null, 0L);
     }
 
     public Map<Integer, Subtask> getSubstasks() {
@@ -26,6 +33,10 @@ public class Epic extends Task {
 
     public void setSubstasks(Map<Integer, Subtask> substasks) {
         this.subtasks = substasks;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     public void addSubtasks(Subtask subtask) {
@@ -60,15 +71,29 @@ public class Epic extends Task {
     }
 
     @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    @Override
+    public String getEndTimeString() {
+        return endTime.format(getDateTimeFormatter());
+    }
+
+    @Override
     public String toString() {
         String str = "Epic {"
                 + "title = '" + title + "'"
                 + ", description.length = '" + description.length() + "'"
                 + ", id = " + id
                 + ", status = " + statusTask
+                + ", startTime = " + startTime
+                + ", duration = " + duration
                 + "\n\tsubtasks{\n";
+
         for (Subtask sub: subtasks.values())
             str += '\t' + sub.toString();
+
         str += "\t} \n }\n";
         return str;
     }
@@ -82,7 +107,7 @@ public class Epic extends Task {
 
         Epic epic = (Epic) o;
         return Objects.equals(subtasks, epic.subtasks) && id == epic.id && Objects.equals(title, epic.title)
-                && Objects.equals(description, epic.description) && statusTask == epic.statusTask;
+                && Objects.equals(description, epic.description) && statusTask == epic.statusTask && duration == epic.duration && startTime.equals(epic.startTime);
     }
 
     @Override
@@ -94,6 +119,8 @@ public class Epic extends Task {
         hash = ((description != null ? description.hashCode() : 0 ) + hash) * prime;
         hash = (id + hash) * prime;
         hash = ((statusTask != null ? statusTask.hashCode() : 0 ) + hash) * prime;
+        hash = ((startTime != null ? startTime.hashCode() : 0 ) + hash) * prime;
+        hash = (int)((duration + hash) * prime);
         hash = ((subtasks != null ? subtasks.hashCode() : 0 ) + hash) * prime;
         return hash;
     }

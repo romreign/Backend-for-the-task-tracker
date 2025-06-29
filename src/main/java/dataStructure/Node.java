@@ -1,4 +1,4 @@
-package com.models.dataStructure;
+package main.java.dataStructure;
 
 import java.util.Objects;
 
