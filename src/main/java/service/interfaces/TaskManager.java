@@ -1,4 +1,4 @@
-package main.java.service;
+package main.java.service.interfaces;
 
 import main.java.exceptions.CollisionTaskException;
 import main.java.models.Epic;
@@ -39,15 +39,17 @@ public interface TaskManager {
 
     void removeTasksOfType (TypeTask typeTask);
 
-    public void removeAll ();
+    void removeAll ();
 
     boolean create(Task inTask);
 
     boolean update(Task inTask);
 
-    public void setEpicDateTime(int id);
+    void setEpicDateTime(int id);
 
-    public List<Task> getPrioritizedTasks();
+    List<Task> getPrioritizedTasks();
 
-    public void validate(Task newTask) throws CollisionTaskException;
+    void validate(Task newTask) throws CollisionTaskException;
+
+    int getNextId();
 }

@@ -1,15 +1,17 @@
-package main.java.service;
+package main.java.service.impl;
 
 import main.java.exceptions.CollisionTaskException;
 import main.java.models.Epic;
 import main.java.models.Subtask;
 import main.java.models.Task;
 import main.java.models.TypeTask;
+import main.java.service.interfaces.HistoryManager;
+import main.java.service.interfaces.TaskManager;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class InMemoryTaskManager implements TaskManager{
+public class InMemoryTaskManager implements TaskManager {
     protected Map<Integer, Task> tasks;
     protected Map<Integer, Subtask> subtasks;
     protected Map<Integer, Epic> epics;

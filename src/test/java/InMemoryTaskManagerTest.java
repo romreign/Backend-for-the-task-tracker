@@ -1,6 +1,6 @@
 package test.java;
 
-import main.java.service.InMemoryTaskManager;
+import main.java.service.impl.InMemoryTaskManager;
 import main.java.service.Manager;
 import org.junit.jupiter.api.BeforeEach;
 

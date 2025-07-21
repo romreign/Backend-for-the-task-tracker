@@ -12,7 +12,7 @@ import main.java.models.Epic;
 import main.java.models.Subtask;
 import main.java.models.Task;
 import main.java.models.TypeTask;
-import main.java.service.TaskManager;
+import main.java.service.interfaces.TaskManager;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         manager.getEpic(1);
         historyList = manager.history();
-        checkList.removeFirst();
+        checkList.remove(0);
         checkList.add(epic);
         assertEquals(historyList, checkList, "Списки историй различны. Повтор не удален.");
 

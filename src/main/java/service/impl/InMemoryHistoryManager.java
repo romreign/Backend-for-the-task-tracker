@@ -1,11 +1,12 @@
-package main.java.service;
+package main.java.service.impl;
 
 import java.util.*;
 
 import main.java.dataStructure.Node;
 import main.java.models.Task;
+import main.java.service.interfaces.HistoryManager;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
 
     private CustomLinkedList history;
 

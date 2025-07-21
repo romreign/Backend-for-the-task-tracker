@@ -1,4 +1,4 @@
-package main.java.service;
+package main.java.service.interfaces;
 
 import main.java.models.Task;
 

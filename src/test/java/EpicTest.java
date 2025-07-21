@@ -1,7 +1,7 @@
 package test.java;
 
 import main.java.service.Manager;
-import main.java.service.TaskManager;
+import main.java.service.interfaces.TaskManager;
 import main.java.models.Epic;
 import main.java.models.Subtask;
 import main.java.models.StatusTask;

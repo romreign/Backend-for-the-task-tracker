@@ -3,8 +3,8 @@ package test.java;
 import main.java.models.Epic;
 import main.java.models.Subtask;
 import main.java.models.Task;
-import main.java.service.InMemoryHistoryManager;
-import main.java.service.HistoryManager;
+import main.java.service.impl.InMemoryHistoryManager;
+import main.java.service.interfaces.HistoryManager;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
