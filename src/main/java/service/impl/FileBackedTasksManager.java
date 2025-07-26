@@ -5,9 +5,9 @@ import java.io.IOException;
 import main.java.exceptions.CollisionTaskException;
 import main.java.models.*;
 import main.java.service.interfaces.HistoryManager;
-import main.java.util.CsvFileReader;
-import main.java.util.CsvFileWriter;
-import main.java.util.CsvFileDeletor;
+import main.java.util.File.CsvFileReader;
+import main.java.util.File.CsvFileWriter;
+import main.java.util.File.CsvFileDeletor;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,6 +19,8 @@ import java.util.List;
 public class FileBackedTasksManager extends InMemoryTaskManager{
     private Path filePath;
     private final static int minLineFile = 4;
+
+    public FileBackedTasksManager() {}
 
     public FileBackedTasksManager(String fileName) {
         super();
@@ -145,7 +147,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
         CsvFileWriter.writeFileContestsOrNull(filePath, line, true);
     }
 
-    private void save() {
+    public void save() {
         try {
             saveTasks();
             CsvFileWriter.writeFileContestsOrNull(filePath, "\n", true);

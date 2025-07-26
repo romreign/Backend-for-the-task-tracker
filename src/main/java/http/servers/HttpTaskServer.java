@@ -3,6 +3,7 @@ package main.java.http.servers;
 import com.google.gson.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import main.java.config.GsonConfig;
 import main.java.models.*;
 import main.java.service.Manager;
 import main.java.service.interfaces.TaskManager;
@@ -29,7 +30,7 @@ public class HttpTaskServer {
 
     public HttpTaskServer(TaskManager taskManager) {
         this.taskManager = taskManager;
-        this.gson = Manager.getDefaultGson();
+        this.gson = GsonConfig.getDefaultGson();
 
         try {
             httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
@@ -39,6 +40,10 @@ public class HttpTaskServer {
             System.out.println("При создании сервера произошла ошибка.");
             e.printStackTrace();
         }
+    }
+
+    public TaskManager getTaskManager() {
+        return taskManager;
     }
 
     public HttpTaskServer() {
